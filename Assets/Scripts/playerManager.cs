@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,6 +19,11 @@ public class playerManager : MonoBehaviour
     public GameObject pauseMenu;
     public GameObject winMenu;
     public GameObject loseMenu;
+
+    private List<Collectable> inventory = new List<Collectable>();
+    public Text inventoryText;
+    public Text descriptionText;
+    private int currentIndex;
 
     // Start is called before the first frame update
     void Start()
@@ -46,6 +52,22 @@ public class playerManager : MonoBehaviour
         if (health <= 0)
         {
             LoseGame();
+        }
+
+        if (inventory.Count == 0) //checking if the inventory is empty
+        {
+            inventoryText.text = "Current Selection: None";
+            descriptionText.text = "";
+        }
+        else //inventory is NOT empty, there are collectables inside our inventory
+        {
+            inventoryText.text = "Current Selection: " + inventory[currentIndex].collectableName + " " + currentIndex.ToString();
+            descriptionText.text = "Press [E] to " + inventory[currentIndex].description;
+        }
+
+        if (inventory.Count > 0) //checking if inventory is NOT empty
+        {
+            if (Input.GetKeyDown(KeyCode.E))
         }
     }
 
