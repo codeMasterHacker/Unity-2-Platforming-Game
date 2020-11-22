@@ -68,6 +68,20 @@ public class playerManager : MonoBehaviour
         if (inventory.Count > 0) //checking if inventory is NOT empty
         {
             if (Input.GetKeyDown(KeyCode.E))
+            {
+                inventory[currentIndex].Use();
+                inventory.RemoveAt(currentIndex);
+
+                if (inventory.Count != 0)
+                {
+                    currentIndex = (currentIndex - 1) % inventory.Count;
+                }
+            }
+
+            if (Input.GetKeyDown(KeyCode.I))
+            {
+                currentIndex = (currentIndex + 1) % inventory.Count;
+            }
         }
     }
 
@@ -138,4 +152,16 @@ public class playerManager : MonoBehaviour
         score += value;
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        Collectable item = collision.GetComponent<Collectable>();
+
+        if (item != null)
+        {
+            item.player = this.gameObject;
+            item.transform.parent = null;
+            inventory.Add(item);
+            item.gameObject.SetActive(false);
+        }
+    }
 }
