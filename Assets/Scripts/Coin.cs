@@ -9,6 +9,8 @@ public class Coin : Collectable
     {
         collectableName = "Coin";
         description = "increase score by 10";
+
+        DontDestroyOnLoad(this.gameObject);
     }
 
     override public void Use()

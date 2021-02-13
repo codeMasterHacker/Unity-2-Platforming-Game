@@ -7,8 +7,8 @@ using UnityEngine.UI;
 public class playerManager : MonoBehaviour
 {
     // Player specific variables
-    private int health;
-    private int score;
+    //private int health;
+    //private int score;
 
     // Boolean values
     private bool isGamePaused = false;
@@ -20,10 +20,12 @@ public class playerManager : MonoBehaviour
     public GameObject winMenu;
     public GameObject loseMenu;
 
-    private List<Collectable> inventory = new List<Collectable>();
+    //private List<Collectable> inventory = new List<Collectable>();
     public Text inventoryText;
     public Text descriptionText;
     private int currentIndex;
+
+    PlayerInfo info;
 
     // Start is called before the first frame update
     void Start()
@@ -36,51 +38,57 @@ public class playerManager : MonoBehaviour
         FindAllMenus();
 
         //Start player with initial health and score
-        health = 100;
-        score = 0;
+        //health = 100;
+        //score = 0;
+
+        info = GameObject.FindWithTag("Info").GetComponent<PlayerInfo>();
+        foreach (Collectable item in info.inventory)
+        {
+            item.player = this.gameObject;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        healthText.text = "Health: " + health.ToString();
-        scoreText.text  = "Score:  " + score.ToString();
+        healthText.text = "Health: " + info.health.ToString();
+        scoreText.text  = "Score:  " + info.score.ToString();
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             PauseGame();
         }
-        if (health <= 0)
+        if (info.health <= 0)
         {
             LoseGame();
         }
 
-        if (inventory.Count == 0) //checking if the inventory is empty
+        if (info.inventory.Count == 0) //checking if the inventory is empty
         {
             inventoryText.text = "Current Selection: None";
             descriptionText.text = "";
         }
         else //inventory is NOT empty, there are collectables inside our inventory
         {
-            inventoryText.text = "Current Selection: " + inventory[currentIndex].collectableName + " " + currentIndex.ToString();
-            descriptionText.text = "Press [E] to " + inventory[currentIndex].description;
+            inventoryText.text = "Current Selection: " + info.inventory[currentIndex].collectableName + " " + currentIndex.ToString();
+            descriptionText.text = "Press [E] to " + info.inventory[currentIndex].description;
         }
 
-        if (inventory.Count > 0) //checking if inventory is NOT empty
+        if (info.inventory.Count > 0) //checking if inventory is NOT empty
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
-                inventory[currentIndex].Use();
-                inventory.RemoveAt(currentIndex);
+                info.inventory[currentIndex].Use();
+                info.inventory.RemoveAt(currentIndex);
 
-                if (inventory.Count != 0)
+                if (info.inventory.Count != 0)
                 {
-                    currentIndex = (currentIndex - 1) % inventory.Count;
+                    currentIndex = (currentIndex - 1) % info.inventory.Count;
                 }
             }
 
             if (Input.GetKeyDown(KeyCode.I))
             {
-                currentIndex = (currentIndex + 1) % inventory.Count;
+                currentIndex = (currentIndex + 1) % info.inventory.Count;
             }
         }
     }
@@ -109,6 +117,14 @@ public class playerManager : MonoBehaviour
         {
             pauseMenu = GameObject.Find("PauseGameMenu");
             pauseMenu.SetActive(false);
+        }
+        if (inventoryText == null)
+        {
+            inventoryText = GameObject.Find("inventoryText").GetComponent<Text>();
+        }
+        if (descriptionText == null)
+        {
+            descriptionText = GameObject.Find("descriptionText").GetComponent<Text>();
         }
     }
 
@@ -144,12 +160,12 @@ public class playerManager : MonoBehaviour
 
     public void ChangeHealth(int value)
     {
-        health += value;
+        info.health += value;
     }
 
     public void ChangeScore(int value)
     {
-        score += value;
+        info.score += value;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -160,7 +176,7 @@ public class playerManager : MonoBehaviour
         {
             item.player = this.gameObject;
             item.transform.parent = null;
-            inventory.Add(item);
+            info.inventory.Add(item);
             item.gameObject.SetActive(false);
         }
     }

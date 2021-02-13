@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5814465217306765051}
   - component: {fileID: 5814465217306765028}
   - component: {fileID: 5814465217306765029}
-  - component: {fileID: 5814465217306765050}
+  - component: {fileID: 7373222210829675996}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -154,7 +154,7 @@ MonoBehaviour:
     wallFrictionStrongVelThreshold: -10
     wallFrictionStrong: 22.5
     version: 1
---- !u!114 &5814465217306765050
+--- !u!114 &7373222210829675996
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -171,3 +171,5 @@ MonoBehaviour:
   pauseMenu: {fileID: 0}
   winMenu: {fileID: 0}
   loseMenu: {fileID: 0}
+  inventoryText: {fileID: 0}
+  descriptionText: {fileID: 0}
